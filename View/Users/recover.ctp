@@ -1,6 +1,6 @@
 <div class="container">
 	<?php echo $this->element('messages'); ?>
-	<form action="/user/recover" method="post">
+	<form action="<?php echo $this->webroot?>users/recover" method="post">
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("E-Mail Adresse:"); ?></span>
 			<input class="form-control input-lg" type="email" name="email">

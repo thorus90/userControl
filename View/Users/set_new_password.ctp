@@ -1,6 +1,6 @@
 <div class="container">
 	<?php echo $this->element('messages'); ?>
-	<form action="/user/setNewPassword" method="post">
+	<form action="<?php echo $this->webroot?>users/setNewPassword" method="post">
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Passwort:"); ?></span>
 			<input class="form-control input-lg" type="password" name="password">
