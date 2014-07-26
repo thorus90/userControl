@@ -1,0 +1,3 @@
+- general.ini in users.ini umbenennen und per setup.py default anlegen lassen
+- Config in bootstrap.php für Conigure::read rein echon lassen und dann darauf prüfen
+
