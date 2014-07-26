@@ -1,7 +1,6 @@
 #!/bin/env python3
 
 symlinks = [
-	(sdir + '/Config/general.ini', cakedir + '/Config/general.ini'),
 	(sdir + '/Controller/UsersController.php', cakedir + '/Controller/UsersController.php'),
 	(sdir + '/js/user/register.js', cakedir + '/webroot/js/user/register.js'),
 	(sdir + '/Model/User.php', cakedir + '/Model/User.php'),
