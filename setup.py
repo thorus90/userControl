@@ -5,7 +5,7 @@ import sys
 
 
 sdir = os.path.dirname( os.path.realpath(__file__) )
-wdir = os.path.normpath( os.path.join(sdir, '..', '..') )
+wdir = os.path.relpath( os.path.join(sdir, '..', '..') )
 cakedir = wdir + '/app'
 
 execfile("config.py")
@@ -30,5 +30,4 @@ for symlink in symlinks:
             os.unlink ( dsym )
         else:
             continue
-
-    os.symlink( sfile, dsym )
+    os.symlink( os.path.relpath(sfile, os.path.realpath(dsym)), dsym )

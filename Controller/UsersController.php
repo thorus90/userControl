@@ -4,7 +4,16 @@ class UsersController extends AppController
 {
 
 	public $helpers = array('Html');
-	public $components = array('Session');
+	public $components = array(
+        'Session',
+        'Auth' => array(
+            'authenticate' => array(
+                'Form' => array(
+                    'passwordHasher' => 'Blowfish'
+                )
+            )
+        )
+    );
 	protected $secureActions = array('login');
 	public $user = "";
 	public $id = 0;
@@ -54,7 +63,8 @@ class UsersController extends AppController
 		$this->_stop();
 	}
 
-	public function login ()
+
+    public function login ()
 	{
 		if( $this->request->is('post') )
 		{
@@ -65,7 +75,6 @@ class UsersController extends AppController
 			$this->create_user($userArray);
 			$cryptconf = substr($this->pw,0,30);
 			if ($this->pw == crypt($this->request->data['pass'], $cryptconf )){
-				session_start();
 				$this->Session->write('user.user', $this->user);
 				$this->Session->write('user.loggedIn', True);
 				$this->Session->write('user.language', $this->language);
@@ -79,7 +88,7 @@ class UsersController extends AppController
 			}
 		}
 	}
-
+    
 	private function create_user ($userArray)
 	{
 		foreach ($userArray as $user) 
