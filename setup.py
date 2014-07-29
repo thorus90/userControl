@@ -30,5 +30,4 @@ for symlink in symlinks:
             os.unlink ( dsym )
         else:
             continue
-    print(os.path.relpath(sfile, os.path.realpath(os.path.dirname(dsym))))
     os.symlink( os.path.relpath(sfile, os.path.realpath(os.path.dirname(dsym))), dsym )
