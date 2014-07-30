@@ -1,24 +1,19 @@
 <?php
+
 class User extends AppModel {
+
     public function beforeSave($options = array())
     {
         parent::beforeSave($options = array());
         $this->data['User']['resetkey'] = Security::hash(mt_rand(),'md5',true);
-        return True;
+        if (isset($this->data[$this->alias]['password'])) {
+            $this->data[$this->alias]['password'] = Security::hash($this->data[$this->alias]['password'], 'blowfish', false);
+        }
+        return true;
     }
 
-    public $displayField = 'user';
-    public $recursive = -1;
-    public $_schema = array
-    (
-        'language' => array
-        (
-            'length' => 3
-        )
-    );
-
     public $validate = array(
-        'user' => array(
+        'username' => array(
             'required' => array
             (
                 'rule' => array('notEmpty'),

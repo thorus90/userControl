@@ -3,8 +3,8 @@
 class UsersController extends AppController
 {
 
-	public $helpers = array('Html');
 	public $components = array(
+		'DebugKit.Toolbar',
         'Session',
         'Auth' => array(
             'authenticate' => array(
@@ -15,12 +15,6 @@ class UsersController extends AppController
         )
     );
 	protected $secureActions = array('login');
-	public $user = "";
-	public $id = 0;
-	public $email = "";
-	public $language = "";
-	public $role = "";
-	private $pw = "";
 
 	public function beforeFilter() 
 	{
@@ -30,21 +24,7 @@ class UsersController extends AppController
 			$this->forceSSL();
 		}
 		App::uses('CakeEmail', 'Network/Email');
-	}
-
-	private function getUserbyName ($user)
-	{
-		$userArray = $this->User->find('first',array
-			(
-				'conditions' => array('User.user' => $user)
-			)
-		);
-		return $userArray;
-	}
-
-	private function returnUserNotExist ()
-	{
-		$this->sendMessage("2", __('Dieser Benutzer existiert nicht!') );
+        //$this->Auth->allow('register','login','recover');
 	}
 
 	private function sendMessage ($ret, $message)
@@ -68,66 +48,25 @@ class UsersController extends AppController
 	{
 		if( $this->request->is('post') )
 		{
-			if( !($userArray = $this->getUserbyName($this->request->data['user'])) )
-			{
-				$this->returnUserNotExist();
-			}
-			$this->create_user($userArray);
-			$cryptconf = substr($this->pw,0,30);
-			if ($this->pw == crypt($this->request->data['pass'], $cryptconf )){
-				$this->Session->write('user.user', $this->user);
-				$this->Session->write('user.loggedIn', True);
-				$this->Session->write('user.language', $this->language);
-				$this->Session->write('user.email', $this->email);
-				$this->Session->write('user.role', $this->role);
-				$this->redirect('/');
-			}
-			else
-			{
-				$this->sendMessage('2', __('Passwort ist inkorrekt!') );
-			}
+            if ($this->Auth->login()) {
+                return $this->redirect($this->Auth->redirect());
+            }
+            $this->Session->setFlash(__('Invalid username or password, try again'));
 		}
 	}
     
-	private function create_user ($userArray)
-	{
-		foreach ($userArray as $user) 
-		{
-			$this->user = $user['user'];
-			$this->id = $user['id'];
-			$this->email = $user['email'];
-			$this->language = $user['language'];
-			$this->pw = $user['password'];
-			$this->role = $user['role'];
-		}
-	}
-
 	public function register() 
 	{
 		if( $this->request->is('post') )
 		{
-			$this->set("post", $this->request->data);
-			if( $this->request->data['password'] != $this->request->data['pwsame'] )
-			{
-				$this->sendMessage("2", __('Passwörter stimmen nicht überein!'));
-			}
-			$this->request->data['password'] = $this->hashPassword($this->request->data['password']);
-			if( !(isset($this->request->data['role'])) || $this->request->data['role'] == "")
-			{
-				$this->request->data['role'] = 'user';
-			}
-			if( !(isset($this->request->data['language'])) || $this->request->data['language'] == "")
-			{
-				$this->request->data['language'] = Configure::read('Config.language');
-			}
-			if( $this->User->save($this->request->data) )
-			{
-				$this->sendMessage("0", __('Benutzer wurde erstellt. Sie werden umgeleitet.') );
-			}
-			else
-			{
-				$this->sendMessage("2", $this->User->validationErrors);
-			}
+            $this->User->create();
+            if ($this->User->save($this->request->data)) {
+                $this->Session->setFlash(__('The user has been saved'));
+                return $this->redirect(array('action' => 'login'));
+            }
+            $this->Session->setFlash(
+                __('The user could not be saved. Please, try again.')
+            );
 		}
 	}
 
@@ -172,7 +111,7 @@ class UsersController extends AppController
 	}
 	private function hashPassword($clearPW)
 	{
-		$conf = '$2a$08$';
+		$conf = '$2a$10$';
 		$salt = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 22);
 		$crypt = crypt ( $clearPW, $conf . $salt );
 		return $crypt;
@@ -237,8 +176,7 @@ class UsersController extends AppController
 
 	public function logout ()
 	{
-		$this->Session->destroy();
-		$this->redirect('/');
+        return $this->redirect($this->Auth->logout());
 	}
 
 	private function forceSSL ()

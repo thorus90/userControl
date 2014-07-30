@@ -7,7 +7,7 @@ echo $this->Html->script('/js/' . 'user' . DS . 'register.js');
 	<form action="<?php echo $this->webroot; ?>users/register" method="post">
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Benutzername:"); ?></span>
-			<input class="form-control input-lg" <?php if(isset($post)) echo 'value="' . $post['user'] . '" ' ?> type="user" name="user">
+			<input class="form-control input-lg" <?php if(isset($post)) echo 'value="' . $post['user'] . '" ' ?> type="user" name="username">
 		</div>
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("E-Mail Adresse:"); ?></span>
