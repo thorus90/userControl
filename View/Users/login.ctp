@@ -16,5 +16,4 @@
 		}
 		?>
 	</form>
-	<?php echo $this->element('messages'); ?>
 </div>

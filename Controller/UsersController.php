@@ -3,6 +3,7 @@
 class UsersController extends AppController
 {
 
+	public $helpers = array('Html');
 	public $components = array(
 		'DebugKit.Toolbar',
         'Session',
@@ -24,41 +25,25 @@ class UsersController extends AppController
 			$this->forceSSL();
 		}
 		App::uses('CakeEmail', 'Network/Email');
-        //$this->Auth->allow('register','login','recover');
+		$this->Auth->allow('register', 'login', 'recover', 'setNewPassword');
 	}
-
-	private function sendMessage ($ret, $message)
-	{
-		if( is_array($message) )
-		{
-			$sendMessage = $message;
-		}
-		else
-		{
-			$sendMessage = array ( "default" => array( "0" => $message ) );
-		}
-		$this->set('messages', array(0 => array('ret' => $ret, 'message' => $sendMessage ) ) );
-		$this->render();
-		$this->response->send();
-		$this->_stop();
-	}
-
 
     public function login ()
 	{
 		if( $this->request->is('post') )
 		{
-            if ($this->Auth->login()) {
-                return $this->redirect($this->Auth->redirect());
-            }
-            $this->Session->setFlash(__('Invalid username or password, try again'));
+			if ($this->request->is('post')) {
+		        if ($this->Auth->login()) {
+		            return $this->redirect($this->Auth->redirect());
+		        }
+		        $this->Session->setFlash(__('Invalid username or password, try again'));
+		    }
 		}
 	}
     
 	public function register() 
 	{
-		if( $this->request->is('post') )
-		{
+		if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'));
@@ -67,7 +52,7 @@ class UsersController extends AppController
             $this->Session->setFlash(
                 __('The user could not be saved. Please, try again.')
             );
-		}
+        }
 	}
 
 	public function recover()
@@ -84,7 +69,7 @@ class UsersController extends AppController
 			);
 			if(!$data)
 			{
-				$this->sendMessage("2", __('Keine solche E-Mail Adresse registriert.') );
+				$this->setFlash('Keine solche E-Mail Adresse registriert.');
 			}
 			else
 			{
@@ -99,22 +84,15 @@ class UsersController extends AppController
 				$email->template('recover_password');
 				if( $email->send('recover_password') )
 				{
-					$this->sendMessage('0', __('Instruktionen wurden Ihnen per E-Mail zugeschickt!') );
+					$this->Session->setFlash('Instruktionen wurden Ihnen per E-Mail zugeschickt!');
 				}
 				else
 				{
-					$this->sendMessage('2', __('Etwas ist schief gelaufen. Bitte probieren Sie es später erneut.') );
+					$this->Session->setFlash('Etwas ist schief gelaufen. Bitte probieren Sie es später erneut.');
 				}
 
 			}
 		}
-	}
-	private function hashPassword($clearPW)
-	{
-		$conf = '$2a$10$';
-		$salt = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 22);
-		$crypt = crypt ( $clearPW, $conf . $salt );
-		return $crypt;
 	}
 
 	public function setNewPassword()
@@ -125,28 +103,23 @@ class UsersController extends AppController
 				(
 					'conditions' => array
 					(
-						'User.id' => $this->request->data['id'],
-						'User.resetkey' => $this->request->data['resetkey']
+						'User.id' => $this->request->data['User']['id'],
+						'User.resetkey' => $this->request->data['User']['resetkey']
 					)
 				)
 			);
 			if( !$data )
 			{
-				$this->sendMessage("2", __('Benutzer nicht gefunden oder Key inkorrekt!'));
-			}
-			if( $this->request->data['password'] != $this->request->data['pwsame'] )
-			{
-				$this->sendMessage("2", __('Passwörter stimmen nicht überein!'));
-			}
-			$this->request->data['password'] = $this->hashPassword($this->request->data['password']);
-			if( $this->User->save($this->request->data) )
-			{
-				$this->sendMessage("0", __('Passwort wurde gesetzt. Sie werden umgeleitet.') );
+				$this->Session->setFlash('Benutzer nicht gefunden oder Key inkorrekt!');
 			}
 			else
 			{
-				$this->sendMessage("2", $this->User->validationErrors);
-			}
+				if ($this->User->save($this->request->data)) {
+                	$this->Session->setFlash(__('Neues Passwort gespeichert!'));
+                	return $this->redirect(array('action' => 'login'));
+	            }
+	            $this->Session->setFlash(__('Fehler beim Setzen des neuen Passworts!'));
+				}
 		}
 		else
 		{
@@ -167,16 +140,20 @@ class UsersController extends AppController
 			);
 			if( !$data )
 			{
-				$this->sendMessage("2", __('Benutzer nicht gefunden oder Key inkorrekt!'));
+				$this->Session->setFlash('Benutzer nicht gefunden oder Key inkorrekt!');
 			}
-			$this->set('id', $data['User']['id']);
-			$this->set('resetkey', $data['User']['resetkey']);
+			else
+			{
+				$this->set('id', $data['User']['id']);
+				$this->set('resetkey', $data['User']['resetkey']);
+				$this->set('username', $data['User']['username']);
+			}
 		}
 	}
 
 	public function logout ()
 	{
-        return $this->redirect($this->Auth->logout());
+		return $this->redirect($this->Auth->logout());
 	}
 
 	private function forceSSL ()

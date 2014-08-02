@@ -1,15 +1,19 @@
 <?php
 
-class User extends AppModel {
+App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
+class User extends AppModel {
     public function beforeSave($options = array())
     {
         parent::beforeSave($options = array());
         $this->data['User']['resetkey'] = Security::hash(mt_rand(),'md5',true);
         if (isset($this->data[$this->alias]['password'])) {
-            $this->data[$this->alias]['password'] = Security::hash($this->data[$this->alias]['password'], 'blowfish', false);
+            $passwordHasher = new BlowfishPasswordHasher();
+            $this->data[$this->alias]['password'] = $passwordHasher->hash(
+                $this->data[$this->alias]['password']
+            );
         }
-        return true;
+        return True;
     }
 
     public $validate = array(

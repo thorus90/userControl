@@ -1,18 +1,49 @@
+<?php
+$inputoptions = array(
+	'class' => 'form-control input-lg',
+	'required' => 'true',
+	'label' => ''
+);
+?>
 <div class="container">
 	<?php echo $this->element('messages'); ?>
-	<form action="<?php echo $this->webroot?>users/setNewPassword" method="post">
+	<?php echo $this->Form->create('Users', array('action' => 'setNewPassword')); ?>
+		<div class="input-group input-group-lg">
+			<span class="input-group-addon"><?php echo __("Benutzername:"); ?></span>
+			<?php echo $this->Form->input('User.username', array
+				(
+					'label' => '',
+					'class' => 'form-control input-lg',
+					'disabled' => 'disabled',
+					'value' => $username
+				)
+			); ?>
+		</div>
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Passwort:"); ?></span>
-			<input class="form-control input-lg" type="password" name="password">
+			<?php echo $this->Form->input('User.password', array
+				(
+					'label' => '',
+					'class' => 'form-control input-lg'
+				)
+			); ?>
 		</div>
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Passwort wiederholen:"); ?></span>
-			<input class="form-control input-lg" type="password" name="pwsame">
+			<?php echo $this->Form->input('User.pwsame', array
+				(
+					'label' => '',
+					'class' => 'form-control input-lg',
+					'type' => 'password'
+				)
+			); ?>
 		</div>
-		<input type="hidden" name="id" value="<?php if( isset($id) ) { echo $id; } ?>">
-		<input type="hidden" name="resetkey" value="<?php if( isset($id) ) { echo $resetkey; } ?>">
-		<button class="btn btn-default submit" type="submit">
-			<?php echo __("Abschicken"); ?>
-		</button>
-	</form>
+		<?php 
+		echo $this->Form->input('User.id',array('type' => 'hidden','value' => $id)); 
+		echo $this->Form->input('User.resetkey',array('type' => 'hidden','value' => $resetkey)); 
+		echo $this->Form->button(__('Passwort setzen'), array(
+			'class' => 'btn btn-default submit',
+			'type' => 'submit')
+		);
+	echo $this->Form->end(); ?>
 </div>
