@@ -14,7 +14,7 @@ $inputoptions = array(
 				(
 					'label' => '',
 					'class' => 'form-control input-lg',
-					'disabled' => 'disabled',
+					'disabled' => true,
 					'value' => $username
 				)
 			); ?>

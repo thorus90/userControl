@@ -69,7 +69,7 @@ class UsersController extends AppController
 			);
 			if(!$data)
 			{
-				$this->setFlash('Keine solche E-Mail Adresse registriert.');
+				$this->Session->setFlash('Keine solche E-Mail Adresse registriert.');
 			}
 			else
 			{
@@ -114,11 +114,11 @@ class UsersController extends AppController
 			}
 			else
 			{
-				if ($this->User->save($this->request->data)) {
+				if ( $this->User->saveField('password', $this->request->data['User']['password']) ) {
                 	$this->Session->setFlash(__('Neues Passwort gespeichert!'));
                 	return $this->redirect(array('action' => 'login'));
 	            }
-	            $this->Session->setFlash(__('Fehler beim Setzen des neuen Passworts!'));
+	            	$this->Session->setFlash(debug($this->request->data));
 				}
 		}
 		else

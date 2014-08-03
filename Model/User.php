@@ -27,11 +27,18 @@ class User extends AppModel {
             (
                 'rule' => array('isUnique'),
                 'message' => 'Benutzername bereits vergeben!'
+            ),
+            'alphaNumeric' => array
+            (
+                'rule' => array('alphaNumeric'),
+                'required' => true,
+                'message' => 'Als Benutzername nur Buchstaben und Zahlen!'
             )
         ),
         'password' => array
         (
-            'required' => array(
+            'required' => array
+            (
                 'rule' => array('notEmpty'),
                 'message' => 'Ein Passwort wird benötigt!'
             )
