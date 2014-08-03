@@ -1,4 +1,3 @@
-- Username Zeichenbeschränkung
 - Passwort und Passwortwiederholung prüfen
 - Config in bootstrap.php für Conigure::read rein echon lassen und dann darauf prüfen
 - Router::connect('/reset/*',array('controller'=>'Users','action'=>'setNewPassword')); setzen
