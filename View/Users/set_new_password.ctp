@@ -30,7 +30,7 @@ $inputoptions = array(
 		</div>
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Passwort wiederholen:"); ?></span>
-			<?php echo $this->Form->input('User.pwsame', array
+			<?php echo $this->Form->input('User.password_confirm', array
 				(
 					'label' => '',
 					'class' => 'form-control input-lg',

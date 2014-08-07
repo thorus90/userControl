@@ -13,6 +13,10 @@ class User extends AppModel {
                 $this->data[$this->alias]['password']
             );
         }
+		if (isset($this->data['User']['password_confirm']))
+		{
+		  unset($this->data['User']['password_confirm']);
+		}
         return True;
     }
 
@@ -40,9 +44,25 @@ class User extends AppModel {
             'required' => array
             (
                 'rule' => array('notEmpty'),
+                'required' => true,
                 'message' => 'Ein Passwort wird benötigt!'
             )
         ),
+		'password_confirm' => array
+		(
+			'required' => array
+			(
+				'rule' => array('notEmpty'),
+				'required' => true,
+				'message' => 'Ein Passwort wird benötigt!'
+			),
+			'match' => array
+			(
+				'rule' => array('validatePasswdConfirm'),
+				'required' => true,
+				'message' => 'Passwörter stimmen nicht überein'
+			)
+		),
         'role' => array
         (
             'valid' => array
@@ -59,5 +79,14 @@ class User extends AppModel {
             'allowEmpty' => false
         )
     );
+
+	public function validatePasswdConfirm($data)
+	{
+		if ($this->data['User']['password'] !== $data['password_confirm'])
+		{
+		  return false;
+		}
+		return true;
+	}
 }
 ?>

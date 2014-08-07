@@ -40,7 +40,7 @@ class UsersController extends AppController
 		    }
 		}
 	}
-    
+	
 	public function register() 
 	{
 		if ($this->request->is('post')) {

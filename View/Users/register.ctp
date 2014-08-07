@@ -19,7 +19,7 @@ echo $this->Html->script('/js/' . 'user' . DS . 'register.js');
 		</div>
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Passwort wiederholen:"); ?></span>
-			<input class="form-control input-lg" type="password" <?php if(isset($post)) echo 'value="' . $post['pwsame'] . '" ' ?> name="pwsame">
+			<input class="form-control input-lg" type="password" <?php if(isset($post)) echo 'value="' . $post['password_confirm'] . '" ' ?> name="password_confirm">
 		</div>
 		<div class="input-group input-group-lg">
 			<div class="input-group-btn">
