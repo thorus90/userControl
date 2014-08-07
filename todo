@@ -1,3 +1,4 @@
 - Config in bootstrap.php für Conigure::read rein echon lassen und dann darauf prüfen
 - eine default general.ini ausliefern
+- mysql scheme auslieferen (und direkt einspielen?)
 - Router::connect('/reset/*',array('controller'=>'Users','action'=>'setNewPassword')); setzen
