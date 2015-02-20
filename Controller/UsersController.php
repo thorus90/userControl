@@ -5,7 +5,6 @@ class UsersController extends AppController
 
 	public $helpers = array('Html');
 	public $components = array(
-		'DebugKit.Toolbar',
         'Session',
         'Auth' => array(
             'authenticate' => array(
@@ -30,6 +29,7 @@ class UsersController extends AppController
 
     public function login ()
 	{
+        $this->set('noNavbar',True);
 		if( $this->request->is('post') )
 		{
 			if ($this->request->is('post')) {
