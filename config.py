@@ -12,3 +12,10 @@ symlinks = [
 	(sdir + '/View/Users/register.ctp', cakedir + '/View/Users/register.ctp'),
 	(sdir + '/View/Users/set_new_password.ctp', cakedir + '/View/Users/set_new_password.ctp')
 ]
+
+lines_in_files = [
+        ("Router::connect('/reset/*',array('controller'=>'Users','action'=>'setNewPassword'));" , cakedir + '/Config/routes.php'),
+        ("App::uses('IniReader', 'Configure');", cakedir + '/Config/bootstrap.php'),
+        ("Configure::config('ini', new IniReader());", cakedir + '/Config/bootstrap.php'),
+        ("Configure::load('general.ini', 'ini');", cakedir + '/Config/bootstrap.php')
+]

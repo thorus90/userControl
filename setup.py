@@ -32,3 +32,17 @@ for symlink in symlinks:
             continue
     print(os.path.relpath(sfile, os.path.realpath(os.path.dirname(dsym))))
     os.symlink( os.path.relpath(sfile, os.path.realpath(os.path.dirname(dsym))), dsym )
+
+for confline in lines_in_files:
+    line = confline[0]
+    dfile = confline[1]
+    found = False
+    with open(dfile) as search:
+        for tmpline in search:
+            tmpline = tmpline.rstrip()
+            if line == tmpline:
+                found = True
+    if not found:
+        with open(dfile, "a") as wfile:
+            wfile.write(line)
+            print("Added " + line + " to " + dfile)
