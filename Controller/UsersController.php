@@ -43,6 +43,7 @@ class UsersController extends AppController
 	
 	public function register() 
 	{
+        $this->set('noNavbar', True);
 		if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
