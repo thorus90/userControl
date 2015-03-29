@@ -3,7 +3,12 @@
 class UsersController extends AppController
 {
 
-	public $helpers = array('Html');
+    public $helpers = array(
+        'Html',
+        'Form' => array(
+              'className' => 'BootstrapForm'
+        )
+    );
 	public $components = array(
         'Session',
         'Auth' => array(
@@ -111,12 +116,12 @@ class UsersController extends AppController
 			);
 			if( !$data )
 			{
-				$this->Session->setFlash('Benutzer nicht gefunden oder Key inkorrekt!');
+				$this->Session->setFlash(__('Benutzer nicht gefunden oder Key inkorrekt!'));
 			}
 			else
 			{
 				if ( $this->User->saveField('password', $this->request->data['User']['password']) ) {
-                	$this->Session->setFlash(__('Neues Passwort gespeichert!'));
+                	$this->Session->setFlash(__('New Password saved!'));
                 	return $this->redirect(array('action' => 'login'));
 	            }
 	            	$this->Session->setFlash(debug($this->request->data));
@@ -151,6 +156,43 @@ class UsersController extends AppController
 			}
 		}
 	}
+
+    public function edit($id = null)
+    {
+        if( $id == null )
+        {
+            $id = $this->Auth->user('id');
+        }
+        $data = $this->User->find('first', array
+            (
+                'conditions' => array
+                (
+                    'User.id' => $id,
+                )
+            )
+        );
+        $this->set('id',$id);
+        $this->set('email',$data['User']['email']);
+        if( $this->request->is('post') )
+        {
+            $options = array(
+                'fieldList' => array(
+                    'email',
+                    'password',
+                    'password_confirm'
+                )
+            );
+            if( $this->User->save($this->request->data,$options) )
+            {
+                $this->Session->setFlash(__('0/Changes saved!'),'flash_minimal');
+            }
+            else
+            {
+                $this->Session->setFlash(__('2/Error while saving!'));
+                debug($this->User->validationErrors);
+            }
+        }
+    }
 
 	public function logout ()
 	{

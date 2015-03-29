@@ -7,6 +7,7 @@ symlinks = [
 	(sdir + '/Model/User.php', cakedir + '/Model/User.php'),
 	(sdir + '/View/Emails/html/recover_password.ctp', cakedir + '/View/Emails/html/recover_password.ctp'),
 	(sdir + '/View/Elements/messages.ctp', cakedir + '/View/Elements/messages.ctp'),
+	(sdir + '/View/Users/edit.ctp', cakedir + '/View/Users/edit.ctp'),
 	(sdir + '/View/Users/login.ctp', cakedir + '/View/Users/login.ctp'),
 	(sdir + '/View/Users/recover.ctp', cakedir + '/View/Users/recover.ctp'),
 	(sdir + '/View/Users/register.ctp', cakedir + '/View/Users/register.ctp'),
