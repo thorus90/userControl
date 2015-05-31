@@ -3,8 +3,16 @@
 echo $this->Html->script('/js/' . 'user' . DS . 'register.js'); 
 ?>
 <div class="container">
-	<?php echo $this->element('messages'); ?>
-	<form action="<?php echo $this->webroot; ?>users/register" method="post">
+	<?php echo $this->element('messages'); 
+    echo $this->Form->create($user);
+    echo $this->Form->input('username', [ 'label' => __('Benutzername:') ] );
+    echo $this->Form->input('email', [ 'label' => __('E-Mail Adresse:') ] );
+    echo $this->Form->input('password', [ 'label' => __('Passwort:') ] );
+    echo $this->Form->input('password_confirm', [ 'label' => __('Passwort wiederholen:') ] );
+    echo $this->Form->submit(__('Abschicken'));
+    echo $this->Form->end();
+    ?>
+<!--	<form action="users/register" method="post">
 		<div class="input-group input-group-lg">
 			<span class="input-group-addon"><?php echo __("Benutzername:"); ?></span>
 			<input class="form-control input-lg" <?php if(isset($post)) echo 'value="' . $post['user'] . '" ' ?> type="user" name="username">
@@ -41,4 +49,5 @@ echo $this->Html->script('/js/' . 'user' . DS . 'register.js');
 				<?php echo __("Abschicken"); ?>
 		</button>
 	</form>
+-->
 </div>

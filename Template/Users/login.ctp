@@ -1,4 +1,11 @@
 <div class="container">
+    <?php
+    echo $this->Form->create($user);
+    echo $this->Form->input('username', [ 'label' => __('Benutzername'), 'placeholder' => __('Benutzername') ] );
+    echo $this->Form->input('password', [ 'label' => __('Passwort'), 'placeholder' => __('Passwort') ] );
+    echo $this->Form->submit(__('Einloggen'));
+    echo $this->Form->end();
+    /*
 	<form action="<?php echo $this->webroot?>users/login" method="post" class="form-signin">
 		<label class="control-label"><?php echo __('Benutzername'); ?>:</label>
 		<input type="text" id="user" class="form-control" placeholder="<?php echo __('Benutzername'); ?>" name="data[User][username]" autofocus>
@@ -15,5 +22,5 @@
 			echo '<small class="pull-right">' . $this->Html->link(__('Passwort vergessen?'), '/users/recover') . '</small>';
 		}
 		?>
-	</form>
+	</form> */ ?>
 </div>

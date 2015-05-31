@@ -2,14 +2,19 @@
 
 import os
 import sys
-
+import json
+import simplejson
+import subprocess
 
 sdir = os.path.dirname( os.path.realpath(__file__) )
 wdir = os.path.relpath( os.path.join(sdir, '..', '..') )
-cakedir = wdir + '/app'
+cakedir = wdir
+appdir = wdir  + '/src'
+with open(cakedir + '/composer.json') as f:
+    composerjson = simplejson.load(f)
 
 execfile("config.py")
-print("Notice: taking this as docroot: " + cakedir)
+print("Notice: taking this as docroot: " + os.path.realpath ( cakedir ))
 
 for symlink in symlinks:
     ddir = os.path.dirname( symlink[1] )
@@ -25,13 +30,18 @@ for symlink in symlinks:
         sys.exit()
 
     if os.path.islink ( dsym ):
-        if os.path.realpath ( dsym ) != sfile:
-            print("Notice: incorrect symlink.. correcting " + dsym)
+        if os.path.realpath ( dsym ) != os.path.realpath ( sfile ):
+            print("Notice: incorrect symlink.. correcting " + sfile)
             os.unlink ( dsym )
         else:
             continue
-    print(os.path.relpath(sfile, os.path.realpath(os.path.dirname(dsym))))
     os.symlink( os.path.relpath(sfile, os.path.realpath(os.path.dirname(dsym))), dsym )
+
+with open(cakedir + '/composer.json', 'w') as data_file:
+    data_file.write(simplejson.dumps(composerjson, indent=4, sort_keys=True))
+
+command = ['/usr/bin/php', os.path.realpath(cakedir) + '/composer.phar','-d=' + os.path.realpath(cakedir), 'update']
+subprocess.call(command)
 
 for confline in lines_in_files:
     line = confline[0]
@@ -44,5 +54,5 @@ for confline in lines_in_files:
                 found = True
     if not found:
         with open(dfile, "a") as wfile:
-            wfile.write(line)
+            wfile.write(line + '\n')
             print("Added " + line + " to " + dfile)
